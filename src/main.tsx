@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-// ဖိုင်လမ်းကြောင်းကို components/App/App ထဲအထိ ပြောင်းလိုက်ပါတယ်
-import App from './components/App/App' 
+import App from './components/App/App' // 👈 ဒီလမ်းကြောင်း မှန်ပါစေ
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
