@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-// Component ကို export default လုပ်ထားမှ main.tsx က ရှာတွေ့မှာပါ
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState("cases");
   const [balance] = useState(0.01);
@@ -34,9 +33,8 @@ const App: React.FC = () => {
   }, [isFlying, isCrashed, countdown, activeTab]);
 
   return (
-    <div style={{ background: '#0b0e11', minHeight: '100vh', color: 'white', fontFamily: 'sans-serif', paddingBottom: '90px', overflowX: 'hidden' }}>
-      
-      {/* Global Header (Panda) */}
+    <div style={{ background: '#0b0e11', minHeight: '100vh', color: 'white', fontFamily: 'sans-serif', paddingBottom: '90px' }}>
+      {/* Header - Panda Profile */}
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ width: '45px', height: '45px', borderRadius: '15px', background: '#1e2329', border: '1px solid #363c44' }}></div>
@@ -49,18 +47,17 @@ const App: React.FC = () => {
       </div>
 
       <div style={{ padding: '0 20px' }}>
-        
-        {/* Inventory View */}
+        {/* Inventory Tab */}
         {activeTab === "inventory" && (
           <div style={{ textAlign: 'center', marginTop: '40px' }}>
             <div style={{ fontSize: '80px', marginBottom: '20px' }}>💙</div>
             <h3 style={{ margin: '0 0 10px 0' }}>Your inventory is empty</h3>
-            <p style={{ color: '#929aa5', fontSize: '14px', marginBottom: '30px' }}>Have gifts on your account?<br/>Add them via the bot and get TON!</p>
-            <button style={{ width: '100%', padding: '18px', borderRadius: '16px', background: '#355df5', color: 'white', border: 'none', fontWeight: 'bold' }}>🎁 Exchange a gift for TON</button>
+            <p style={{ color: '#929aa5', fontSize: '14px', marginBottom: '30px' }}>Add gifts via the bot and get TON!</p>
+            <button style={{ width: '100%', padding: '18px', borderRadius: '16px', background: '#355df5', color: 'white', border: 'none', fontWeight: 'bold' }}>🎁 Exchange gift for TON</button>
           </div>
         )}
 
-        {/* Upgrade View */}
+        {/* Upgrade Tab */}
         {activeTab === "upgrade" && (
           <div style={{ marginTop: '10px' }}>
             <div style={{ background: 'rgba(30,35,41,0.3)', padding: '40px 20px', borderRadius: '24px', border: '1px solid #2b3139', textAlign: 'center', marginBottom: '20px' }}>
@@ -76,7 +73,7 @@ const App: React.FC = () => {
           </div>
         )}
 
-        {/* Cases View */}
+        {/* Cases Tab */}
         {activeTab === "cases" && (
           <div>
             <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', marginBottom: '20px' }}>
@@ -97,7 +94,7 @@ const App: React.FC = () => {
           </div>
         )}
 
-        {/* Crash View */}
+        {/* Crash Tab */}
         {activeTab === "crash" && (
           <div style={{ textAlign: 'center' }}>
             <div style={{ height: '300px', background: '#1e2329', borderRadius: '25px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #2b3139' }}>
@@ -111,7 +108,7 @@ const App: React.FC = () => {
           </div>
         )}
 
-        {/* Profile View */}
+        {/* Profile Tab */}
         {activeTab === "profile" && (
           <div style={{ marginTop: '10px' }}>
             <div style={{ background: '#1e2329', padding: '20px', borderRadius: '24px', border: '1px solid #2b3139', marginBottom: '20px' }}>
@@ -120,6 +117,13 @@ const App: React.FC = () => {
                 <div><div style={{ fontWeight: 'bold', fontSize: '18px' }}>Pâñðâ</div><div style={{ color: '#929aa5', fontSize: '13px' }}>Hninou23</div></div>
               </div>
               <button style={{ width: '100%', padding: '16px', borderRadius: '16px', background: '#355df5', color: 'white', border: 'none', fontWeight: 'bold' }}>↑ Deposit</button>
+            </div>
+            <div style={{ background: '#1e2329', padding: '20px', borderRadius: '24px', border: '1px solid #2b3139' }}>
+               <h3 style={{ margin: '0 0 15px 0' }}>Referrals</h3>
+               <div style={{ display: 'flex', justifyContent: 'space-between', background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '15px' }}>
+                 <div><div style={{ fontSize: '18px', fontWeight: 'bold' }}>Level 1</div><div style={{ fontSize: '12px', color: '#929aa5' }}>5% income</div></div>
+                 <div style={{ fontSize: '30px' }}>🍪</div>
+               </div>
             </div>
           </div>
         )}
@@ -138,5 +142,4 @@ const App: React.FC = () => {
   );
 };
 
-// ဒီစာကြောင်းက အရေးကြီးဆုံးပါ (Export လုပ်ထားမှ Build အောင်မှာပါ)
 export default App;
