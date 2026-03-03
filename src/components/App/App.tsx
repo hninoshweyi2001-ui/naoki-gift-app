@@ -47,33 +47,7 @@ const App: React.FC = () => {
       </div>
 
       <div style={{ padding: '0 20px' }}>
-        {/* Inventory */}
-        {activeTab === "inventory" && (
-          <div style={{ textAlign: 'center', marginTop: '40px' }}>
-            <div style={{ fontSize: '80px', marginBottom: '20px' }}>💙</div>
-            <h3 style={{ margin: '0 0 10px 0' }}>Your inventory is empty</h3>
-            <p style={{ color: '#929aa5', fontSize: '14px', marginBottom: '30px' }}>Add gifts via the bot and get TON!</p>
-            <button style={{ width: '100%', padding: '18px', borderRadius: '16px', background: '#355df5', color: 'white', border: 'none', fontWeight: 'bold' }}>🎁 Exchange gift for TON</button>
-          </div>
-        )}
-
-        {/* Upgrade */}
-        {activeTab === "upgrade" && (
-          <div style={{ marginTop: '10px' }}>
-            <div style={{ background: 'rgba(30,35,41,0.3)', padding: '40px 20px', borderRadius: '24px', border: '1px solid #2b3139', textAlign: 'center', marginBottom: '20px' }}>
-               <div style={{ width: '50px', height: '50px', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 10px auto' }}>📦</div>
-               <div style={{ color: '#929aa5', fontSize: '14px' }}>Select item to receive</div>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', background: 'rgba(30,35,41,0.3)', padding: '20px', borderRadius: '24px', border: '1px solid #2b3139', marginBottom: '20px' }}>
-              {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} style={{ aspectRatio: '1/1', background: 'rgba(255,255,255,0.03)', borderRadius: '15px', border: '1px dashed #363c44', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#363c44' }}>+</div>
-              ))}
-            </div>
-            <button style={{ width: '100%', padding: '18px', borderRadius: '16px', background: '#1a2b6d', color: '#355df5', border: 'none', fontWeight: 'bold' }}>UPGRADE</button>
-          </div>
-        )}
-
-        {/* Cases */}
+        {/* Cases Section (IMG_5162.jpg အတိုင်း) */}
         {activeTab === "cases" && (
           <div>
             <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', marginBottom: '20px' }}>
@@ -94,6 +68,52 @@ const App: React.FC = () => {
           </div>
         )}
 
+        {/* Upgrade Section (IMG_5163.png အတိုင်း) */}
+        {activeTab === "upgrade" && (
+          <div style={{ marginTop: '10px' }}>
+            <div style={{ background: 'rgba(30,35,41,0.3)', padding: '40px 20px', borderRadius: '24px', border: '1px solid #2b3139', textAlign: 'center', marginBottom: '20px' }}>
+               <div style={{ width: '50px', height: '50px', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 10px auto' }}>📦</div>
+               <div style={{ color: '#929aa5', fontSize: '14px' }}>Select item to receive</div>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', background: 'rgba(30,35,41,0.3)', padding: '20px', borderRadius: '24px', border: '1px solid #2b3139', marginBottom: '20px' }}>
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <div key={i} style={{ aspectRatio: '1/1', background: 'rgba(255,255,255,0.03)', borderRadius: '15px', border: '1px dashed #363c44', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#363c44' }}>+</div>
+              ))}
+            </div>
+            <button style={{ width: '100%', padding: '18px', borderRadius: '16px', background: '#1a2b6d', color: '#355df5', border: 'none', fontWeight: 'bold' }}>UPGRADE</button>
+          </div>
+        )}
+
+        {/* Inventory Section (IMG_5164.jpg အတိုင်း) */}
+        {activeTab === "inventory" && (
+          <div style={{ textAlign: 'center', marginTop: '40px' }}>
+            <div style={{ fontSize: '80px', marginBottom: '20px' }}>💙</div>
+            <h3 style={{ margin: '0 0 10px 0' }}>Your inventory is empty</h3>
+            <p style={{ color: '#929aa5', fontSize: '14px', marginBottom: '30px' }}>Add gifts via the bot and get TON!</p>
+            <button style={{ width: '100%', padding: '18px', borderRadius: '16px', background: '#355df5', color: 'white', border: 'none', fontWeight: 'bold' }}>🎁 Exchange gift for TON</button>
+          </div>
+        )}
+
+        {/* Profile Section (IMG_5165.jpg & IMG_5166.jpg အတိုင်း) */}
+        {activeTab === "profile" && (
+          <div style={{ marginTop: '10px' }}>
+            <div style={{ background: '#1e2329', padding: '20px', borderRadius: '24px', border: '1px solid #2b3139', marginBottom: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '25px' }}>
+                <div style={{ width: '60px', height: '60px', borderRadius: '20px', background: '#363c44' }}></div>
+                <div><div style={{ fontWeight: 'bold', fontSize: '18px' }}>Pâñðâ</div><div style={{ color: '#929aa5', fontSize: '13px' }}>Hninou23</div></div>
+              </div>
+              <button style={{ width: '100%', padding: '16px', borderRadius: '16px', background: '#355df5', color: 'white', border: 'none', fontWeight: 'bold' }}>↑ Deposit</button>
+            </div>
+            <div style={{ background: '#1e2329', padding: '20px', borderRadius: '24px', border: '1px solid #2b3139' }}>
+               <h3 style={{ margin: '0 0 15px 0' }}>Referrals</h3>
+               <div style={{ display: 'flex', justifyContent: 'space-between', background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '15px' }}>
+                 <div><div style={{ fontSize: '18px', fontWeight: 'bold' }}>Level 1</div><div style={{ fontSize: '12px', color: '#929aa5' }}>5% income</div></div>
+                 <div style={{ fontSize: '30px' }}>🍪</div>
+               </div>
+            </div>
+          </div>
+        )}
+
         {/* Crash Section */}
         {activeTab === "crash" && (
           <div style={{ textAlign: 'center' }}>
@@ -105,19 +125,6 @@ const App: React.FC = () => {
             <button style={{ width: '100%', padding: '18px', marginTop: '20px', borderRadius: '16px', background: isFlying ? '#f6465d' : '#355df5', border: 'none', color: 'white', fontWeight: 'bold' }}>
               {isFlying ? "CASH OUT" : "PLACE BET"}
             </button>
-          </div>
-        )}
-
-        {/* Profile */}
-        {activeTab === "profile" && (
-          <div style={{ marginTop: '10px' }}>
-            <div style={{ background: '#1e2329', padding: '20px', borderRadius: '24px', border: '1px solid #2b3139', marginBottom: '20px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '25px' }}>
-                <div style={{ width: '60px', height: '60px', borderRadius: '20px', background: '#363c44' }}></div>
-                <div><div style={{ fontWeight: 'bold', fontSize: '18px' }}>Pâñðâ</div><div style={{ color: '#929aa5', fontSize: '13px' }}>Hninou23</div></div>
-              </div>
-              <button style={{ width: '100%', padding: '16px', borderRadius: '16px', background: '#355df5', color: 'white', border: 'none', fontWeight: 'bold' }}>↑ Deposit</button>
-            </div>
           </div>
         )}
       </div>
@@ -135,4 +142,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App; // 👈 ဒီလိုင်းက main.tsx နဲ့ ချိတ်ဖို့ အရမ်းအရေးကြီးပါတယ်
+export default App;
