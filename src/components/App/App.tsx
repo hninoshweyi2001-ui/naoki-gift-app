@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 
+// Component ကို export default လုပ်ထားမှ main.tsx က ရှာတွေ့မှာပါ
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState("cases");
   const [balance] = useState(0.01);
@@ -34,7 +35,8 @@ const App: React.FC = () => {
 
   return (
     <div style={{ background: '#0b0e11', minHeight: '100vh', color: 'white', fontFamily: 'sans-serif', paddingBottom: '90px', overflowX: 'hidden' }}>
-      {/* Header */}
+      
+      {/* Global Header (Panda) */}
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ width: '45px', height: '45px', borderRadius: '15px', background: '#1e2329', border: '1px solid #363c44' }}></div>
@@ -47,6 +49,8 @@ const App: React.FC = () => {
       </div>
 
       <div style={{ padding: '0 20px' }}>
+        
+        {/* Inventory View */}
         {activeTab === "inventory" && (
           <div style={{ textAlign: 'center', marginTop: '40px' }}>
             <div style={{ fontSize: '80px', marginBottom: '20px' }}>💙</div>
@@ -56,6 +60,7 @@ const App: React.FC = () => {
           </div>
         )}
 
+        {/* Upgrade View */}
         {activeTab === "upgrade" && (
           <div style={{ marginTop: '10px' }}>
             <div style={{ background: 'rgba(30,35,41,0.3)', padding: '40px 20px', borderRadius: '24px', border: '1px solid #2b3139', textAlign: 'center', marginBottom: '20px' }}>
@@ -71,11 +76,12 @@ const App: React.FC = () => {
           </div>
         )}
 
+        {/* Cases View */}
         {activeTab === "cases" && (
           <div>
             <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', marginBottom: '20px' }}>
               {["All cases", "Free", "Basic", "Classic"].map(t => (
-                <button key={t} style={{ padding: '8px 18px', borderRadius: '12px', border: 'none', background: t === "Free" ? '#355df5' : '#1e2329', color: 'white' }}>{t}</button>
+                <button key={t} onClick={() => {}} style={{ padding: '8px 18px', borderRadius: '12px', border: 'none', background: t === "Free" ? '#355df5' : '#1e2329', color: 'white' }}>{t}</button>
               ))}
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
@@ -91,6 +97,7 @@ const App: React.FC = () => {
           </div>
         )}
 
+        {/* Crash View */}
         {activeTab === "crash" && (
           <div style={{ textAlign: 'center' }}>
             <div style={{ height: '300px', background: '#1e2329', borderRadius: '25px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #2b3139' }}>
@@ -104,6 +111,7 @@ const App: React.FC = () => {
           </div>
         )}
 
+        {/* Profile View */}
         {activeTab === "profile" && (
           <div style={{ marginTop: '10px' }}>
             <div style={{ background: '#1e2329', padding: '20px', borderRadius: '24px', border: '1px solid #2b3139', marginBottom: '20px' }}>
@@ -117,7 +125,7 @@ const App: React.FC = () => {
         )}
       </div>
 
-      {/* Bottom Nav */}
+      {/* Bottom Navigation */}
       <div style={{ position: 'fixed', bottom: 0, width: '100%', background: '#0b0e11', display: 'flex', justifyContent: 'space-around', padding: '15px 0', borderTop: '1px solid #2b3139' }}>
         {['inventory', 'upgrade', 'crash', 'cases', 'profile'].map((id) => (
           <div key={id} onClick={() => setActiveTab(id)} style={{ textAlign: 'center', opacity: activeTab === id ? 1 : 0.4 }}>
@@ -130,4 +138,5 @@ const App: React.FC = () => {
   );
 };
 
+// ဒီစာကြောင်းက အရေးကြီးဆုံးပါ (Export လုပ်ထားမှ Build အောင်မှာပါ)
 export default App;
