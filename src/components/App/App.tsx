@@ -1,156 +1,115 @@
 import React, { useState, useEffect } from "react";
 
-// 3D & Premium Assets
-const NFT_AVATAR = "https://img.freepik.com/free-vector/hand-drawn-nft-style-ape-illustration_23-2149622021.jpg";
-const ROCKET_3D = "https://static.vecteezy.com/system/resources/previews/009/384/876/original/rocket-flying-on-transparent-background-free-png.png";
-
-interface BetRecord {
-  user: string;
-  amount: number;
-  icon: string;
-  isNew?: boolean;
-}
+// Premium Assets (Based on Original UI)
+const ROCKET_GIF = "https://i.ibb.co/m0fH4q4/rocket-blue.png"; 
+const AVATAR = "https://i.ibb.co/L6S8C2V/avatar.jpg";
 
 const App: React.FC = () => {
-  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("Crash");
   const [gameState, setGameState] = useState<"waiting" | "running" | "crashed">("waiting");
   const [multiplier, setMultiplier] = useState(1.00);
   const [countdown, setCountdown] = useState(5.00);
-  const [history, setHistory] = useState<string[]>(["x1.52", "x1.86", "x210.75", "x3.56"]);
-  const [bets, setBets] = useState<BetRecord[]>([]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (loading) return;
     let timer: any;
-
     if (gameState === "waiting") {
       timer = setInterval(() => {
         setCountdown(prev => (prev <= 0.1 ? 0 : parseFloat((prev - 0.1).toFixed(2))));
         if (countdown <= 0) setGameState("running");
       }, 100);
-    } 
-    else if (gameState === "running") {
+    } else if (gameState === "running") {
       timer = setInterval(() => {
         setMultiplier(prev => {
           const next = prev + 0.01;
-          if (Math.random() < 0.015 && next > 1.1) {
+          if (Math.random() < 0.012 && next > 1.1) {
             setGameState("crashed");
-            setHistory(prevH => [`x${next.toFixed(2)}`, ...prevH].slice(0, 6));
             return prev;
           }
           return parseFloat(next.toFixed(2));
         });
-      }, 60);
-    } 
-    else if (gameState === "crashed") {
+      }, 50);
+    } else if (gameState === "crashed") {
       timer = setTimeout(() => {
-        setMultiplier(1.00);
-        setCountdown(5.00);
-        setBets([]);
-        setGameState("waiting");
+        setMultiplier(1.00); setCountdown(5.00); setGameState("waiting");
       }, 3000);
     }
     return () => clearInterval(timer);
-  }, [gameState, countdown, loading]);
-
-  const handleBet = (icon: string) => {
-    if (gameState !== "waiting") return;
-    const myBet: BetRecord = { user: "Pâñðâ (You)", amount: 0.10, icon: icon, isNew: true };
-    setBets(prev => [myBet, ...prev]);
-  };
-
-  if (loading) return (
-    <div style={{ background: '#050709', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ textAlign: 'center' }}>
-        <img src={NFT_AVATAR} style={{ width: '110px', borderRadius: '25px', boxShadow: '0 0 30px #355df5', animation: 'float 3s infinite ease-in-out' }} />
-        <div style={{ marginTop: '20px', fontSize: '12px', color: '#355df5', letterSpacing: '4px', fontWeight: 'bold' }}>LOADING...</div>
-      </div>
-      <style>{`@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }`}</style>
-    </div>
-  );
+  }, [gameState, countdown]);
 
   return (
-    <div style={{ background: '#0b0e11', minHeight: '100vh', color: 'white', fontFamily: 'Arial, sans-serif', paddingBottom: '100px' }}>
+    <div style={{ background: '#050a17', minHeight: '100vh', color: 'white', fontFamily: 'Inter, sans-serif' }}>
       
-      {/* 1. Header */}
+      {/* Top Header Section */}
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px 20px', alignItems: 'center' }}>
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <img src={NFT_AVATAR} style={{ width: '45px', height: '45px', borderRadius: '14px', border: '2px solid #355df5' }} />
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <img src={AVATAR} style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px solid #1a2b6d' }} />
           <div>
-            <div style={{ fontWeight: 'bold', fontSize: '16px' }}>Pâñðâ</div>
-            <div style={{ fontSize: '11px', color: '#0ecb81' }}>VIP Level 1</div>
+            <div style={{ fontWeight: '800', fontSize: '14px' }}>Pâñðâ</div>
+            <div style={{ fontSize: '10px', color: '#355df5' }}>Level 1</div>
           </div>
         </div>
-        <div style={{ background: '#1e2329', padding: '10px 18px', borderRadius: '16px', fontWeight: 'bold', color: '#fcd535' }}>0.01 TON</div>
+        <div style={{ background: 'rgba(26, 43, 109, 0.5)', padding: '8px 15px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '8px', border: '1px solid #1a2b6d' }}>
+          <span style={{ color: '#fcd535', fontWeight: 'bold' }}>0.01 TON</span>
+          <div style={{ background: '#355df5', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>+</div>
+        </div>
       </div>
 
+      {/* Main Game Content */}
       <div style={{ padding: '0 15px' }}>
-        {/* 2. 3D Game Area */}
-        <div style={{ background: 'radial-gradient(circle, #1c2127 0%, #0b0e11 100%)', borderRadius: '32px', height: '280px', position: 'relative', border: '1px solid #2b3139', overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
-          
-          {/* Subtle Grid */}
-          <div style={{ position: 'absolute', inset: 0, opacity: 0.05, backgroundImage: 'linear-gradient(#355df5 1px, transparent 1px), linear-gradient(90deg, #355df5 1px, transparent 1px)', backgroundSize: '45px 45px' }}></div>
+        <div style={{ 
+          background: 'radial-gradient(circle at top right, #0d1b3e, #050a17)', 
+          borderRadius: '24px', height: '320px', position: 'relative', border: '1px solid #1a2b6d', overflow: 'hidden' 
+        }}>
+          {/* Grid Layout */}
+          <div style={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'linear-gradient(#355df5 1px, transparent 1px), linear-gradient(90deg, #355df5 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
 
-          <div style={{ zIndex: 10, textAlign: 'center', marginTop: '50px' }}>
-            {gameState === 'waiting' ? (
-              <div style={{ fontSize: '58px', fontWeight: '900', color: '#0ecb81' }}>{countdown.toFixed(2)}</div>
-            ) : (
-              <div style={{ fontSize: '70px', fontWeight: '900', color: gameState === 'crashed' ? '#f6465d' : 'white' }}>{multiplier}x</div>
-            )}
+          <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', marginTop: '40px' }}>
+            <div style={{ fontSize: '64px', fontWeight: '900', color: gameState === 'crashed' ? '#f6465d' : 'white', textShadow: '0 0 20px rgba(53, 93, 245, 0.3)' }}>
+              {gameState === 'waiting' ? countdown.toFixed(2) : `${multiplier}x`}
+            </div>
+            {gameState === 'crashed' && <div style={{ color: '#f6465d', fontWeight: 'bold', letterSpacing: '2px' }}>CRASHED!</div>}
           </div>
 
-          {/* 3D Rocket */}
+          {/* Rocket Animation (3D Move) */}
           {gameState === 'running' && (
-            <div style={{ position: 'absolute', bottom: '20%', left: '20%', animation: 'rocketFly 2s infinite ease-in-out' }}>
-              <img src={ROCKET_3D} style={{ width: '100px', filter: 'drop-shadow(0 0 15px #355df5)' }} />
+            <div style={{ position: 'absolute', bottom: '20%', left: '15%', animation: 'float 2s infinite ease-in-out' }}>
+              <img src={ROCKET_GIF} style={{ width: '130px', filter: 'drop-shadow(0 0 15px #355df5)' }} />
+              <div style={{ position: 'absolute', bottom: '0', left: '-40px', width: '120px', height: '2px', background: 'linear-gradient(90deg, transparent, #355df5)', transform: 'rotate(-30deg)' }}></div>
             </div>
           )}
 
           {/* History Badges */}
-          <div style={{ position: 'absolute', bottom: '15px', display: 'flex', gap: '8px' }}>
-            {history.map((h, i) => (
-              <div key={i} style={{ background: h.includes('210') ? '#4b2b5e' : '#1e2329', color: h.includes('210') ? '#a358df' : '#f6465d', padding: '6px 14px', borderRadius: '12px', fontSize: '11px', fontWeight: 'bold' }}>{h}</div>
+          <div style={{ position: 'absolute', bottom: '15px', display: 'flex', gap: '6px', padding: '0 15px' }}>
+            {['x1.52', 'x1.86', 'x1.00', 'x210.75'].map((h, i) => (
+              <div key={i} style={{ background: h.includes('210') ? '#4b2b5e' : '#1a232e', color: h.includes('210') ? '#a358df' : '#f6465d', padding: '4px 10px', borderRadius: '8px', fontSize: '10px', fontWeight: 'bold' }}>{h}</div>
             ))}
           </div>
         </div>
 
-        {/* 3. Action Buttons */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '20px' }}>
-          <button onClick={() => handleBet("🎁")} style={{ background: '#1e2329', color: 'white', padding: '20px', borderRadius: '24px', border: '1px solid #363c44', fontWeight: 'bold' }}>Bet 🎁</button>
-          <button onClick={() => handleBet("💎")} style={{ background: 'linear-gradient(135deg, #355df5, #00ccff)', color: 'white', padding: '20px', borderRadius: '24px', border: 'none', fontWeight: 'bold', boxShadow: '0 5px 15px rgba(53, 93, 245, 0.3)' }}>Bet 💎</button>
-        </div>
-
-        {/* 4. Live Bet History */}
-        <div style={{ marginTop: '25px' }}>
-          {bets.map((b, idx) => (
-            <div key={idx} style={{ background: '#1e2329', borderRadius: '20px', padding: '15px', display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '12px' }}>
-              <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: '#0b0e11', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px' }}>{b.icon}</div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '14px', fontWeight: 'bold' }}>{b.user}</div>
-                <div style={{ fontSize: '11px', color: '#929aa5' }}>{b.amount} TON • <span style={{color: '#0ecb81'}}>LIVE x{multiplier}</span></div>
-              </div>
-              <div style={{ textAlign: 'right', color: '#0ecb81', fontWeight: 'bold' }}>+{(b.amount * multiplier).toFixed(2)}</div>
-            </div>
-          ))}
+        {/* Action Buttons */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '20px' }}>
+          <button style={{ background: '#1a232e', color: 'white', padding: '18px', borderRadius: '16px', border: '1px solid #2b3139', fontWeight: 'bold' }}>Bet 🎁</button>
+          <button style={{ background: 'linear-gradient(180deg, #355df5 0%, #1a44d6 100%)', color: 'white', padding: '18px', borderRadius: '16px', border: 'none', fontWeight: 'bold', boxShadow: '0 4px 0 #0d278a' }}>Bet 💎</button>
         </div>
       </div>
 
-      {/* 5. Nav Bar */}
-      <div style={{ position: 'fixed', bottom: '0', left: '0', right: '0', background: '#0b0e11', display: 'flex', justifyContent: 'space-around', padding: '20px 0', borderTop: '1px solid #1e2329' }}>
-        {[{n:'Inventory',i:'🎁'}, {n:'Upgrade',i:'⚒️'}, {n:'Crash',i:'📈'}, {n:'Cases',i:'🗃️'}, {n:'Profile',i:'👤'}].map(t => (
-          <div key={t.n} style={{ textAlign: 'center', opacity: t.n === 'Crash' ? 1 : 0.3 }}>
-            <div style={{ fontSize: '24px' }}>{t.i}</div>
-            <div style={{ fontSize: '10px', color: '#929aa5', marginTop: '5px' }}>{t.n}</div>
+      {/* Premium Navigation Bar */}
+      <div style={{ position: 'fixed', bottom: '0', left: '0', right: '0', background: '#0a0f1e', display: 'flex', justifyContent: 'space-around', padding: '12px 0', borderTop: '1px solid #1a2b6d', paddingBottom: '25px' }}>
+        {[
+          {n:'Inventory', i:'🎁'}, {n:'Upgrade', i:'⚒️'}, 
+          {n:'Crash', i:'📈'}, {n:'Cases', i:'🗃️'}, {n:'Profile', i:'👤'}
+        ].map(t => (
+          <div key={t.n} onClick={() => setActiveTab(t.n)} style={{ textAlign: 'center', opacity: activeTab === t.n ? 1 : 0.4 }}>
+            <div style={{ fontSize: '22px' }}>{t.i}</div>
+            <div style={{ fontSize: '10px', marginTop: '4px', fontWeight: 'bold' }}>{t.n}</div>
+            {activeTab === t.n && <div style={{ width: '4px', height: '4px', background: '#355df5', borderRadius: '50%', margin: '4px auto 0' }}></div>}
           </div>
         ))}
       </div>
 
-      <style>{`@keyframes rocketFly { 0%,100%{transform:translate(0,0)} 50%{transform:translate(15px,-20px)} }`}</style>
+      <style>{`
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-15px) rotate(-2deg); } }
+      `}</style>
     </div>
   );
 };
