@@ -20,7 +20,6 @@ const App: React.FC = () => {
   const [bets, setBets] = useState<BetRecord[]>([]);
 
   useEffect(() => {
-    // Loading Screen with 3D Logo Effect
     const timer = setTimeout(() => setLoading(false), 2500);
     return () => clearTimeout(timer);
   }, []);
@@ -66,87 +65,94 @@ const App: React.FC = () => {
   };
 
   if (loading) return (
-    <div style={{ background: '#050709', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
+    <div style={{ background: '#050709', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center' }}>
-        <div style={{ position: 'relative', marginBottom: '30px' }}>
-          <div style={{ position: 'absolute', inset: -20, background: '#355df5', filter: 'blur(50px)', opacity: 0.3 }}></div>
-          <img src={NFT_AVATAR} style={{ width: '110px', borderRadius: '25px', position: 'relative', animation: 'float 3s infinite ease-in-out' }} />
-        </div>
-        <div style={{ fontSize: '12px', letterSpacing: '4px', color: '#355df5', fontWeight: '900' }}>LOADING SYSTEM...</div>
+        <img src={NFT_AVATAR} style={{ width: '110px', borderRadius: '25px', boxShadow: '0 0 30px #355df5', animation: 'float 3s infinite ease-in-out' }} />
+        <div style={{ marginTop: '20px', fontSize: '12px', color: '#355df5', letterSpacing: '4px', fontWeight: 'bold' }}>LOADING...</div>
       </div>
       <style>{`@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }`}</style>
     </div>
   );
 
   return (
-    <div style={{ background: '#0b0e11', minHeight: '100vh', color: 'white', fontFamily: 'Inter, sans-serif', paddingBottom: '100px' }}>
+    <div style={{ background: '#0b0e11', minHeight: '100vh', color: 'white', fontFamily: 'Arial, sans-serif', paddingBottom: '100px' }}>
       
-      {/* 1. Profile Header */}
+      {/* 1. Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px 20px', alignItems: 'center' }}>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <img src={NFT_AVATAR} style={{ width: '45px', height: '45px', borderRadius: '14px', border: '2px solid #355df5', boxShadow: '0 0 10px rgba(53, 93, 245, 0.5)' }} />
+          <img src={NFT_AVATAR} style={{ width: '45px', height: '45px', borderRadius: '14px', border: '2px solid #355df5' }} />
           <div>
-            <div style={{ fontWeight: '800', fontSize: '16px' }}>Pâñðâ</div>
-            <div style={{ fontSize: '11px', color: '#0ecb81', fontWeight: 'bold' }}>VIP LEVEL 1</div>
+            <div style={{ fontWeight: 'bold', fontSize: '16px' }}>Pâñðâ</div>
+            <div style={{ fontSize: '11px', color: '#0ecb81' }}>VIP Level 1</div>
           </div>
         </div>
-        <div style={{ background: 'linear-gradient(180deg, #1e2329 0%, #161a1e 100%)', padding: '10px 18px', borderRadius: '16px', fontWeight: '900', color: '#fcd535', border: '1px solid #2b3139', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          0.01 TON <div style={{ background: '#355df5', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', color: 'white' }}>+</div>
-        </div>
+        <div style={{ background: '#1e2329', padding: '10px 18px', borderRadius: '16px', fontWeight: 'bold', color: '#fcd535' }}>0.01 TON</div>
       </div>
 
       <div style={{ padding: '0 15px' }}>
-        {/* 2. 3D Game Area (ဇယားကွက်မှိန်မှိန် + Rocket ပျံသန်းမှု) */}
-        <div style={{ background: 'radial-gradient(circle at center, #1c2127 0%, #0b0e11 100%)', borderRadius: '32px', height: '280px', position: 'relative', border: '1px solid #2b3139', overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
+        {/* 2. 3D Game Area */}
+        <div style={{ background: 'radial-gradient(circle, #1c2127 0%, #0b0e11 100%)', borderRadius: '32px', height: '280px', position: 'relative', border: '1px solid #2b3139', overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
           
           {/* Subtle Grid */}
           <div style={{ position: 'absolute', inset: 0, opacity: 0.05, backgroundImage: 'linear-gradient(#355df5 1px, transparent 1px), linear-gradient(90deg, #355df5 1px, transparent 1px)', backgroundSize: '45px 45px' }}></div>
 
           <div style={{ zIndex: 10, textAlign: 'center', marginTop: '50px' }}>
             {gameState === 'waiting' ? (
-              <>
-                <div style={{ fontSize: '58px', fontWeight: '900', color: '#0ecb81', textShadow: '0 0 20px rgba(14, 203, 129, 0.3)' }}>{countdown.toFixed(2)}</div>
-                <div style={{ fontSize: '11px', color: '#0ecb81', letterSpacing: '4px', fontWeight: 'bold' }}>STARTING...</div>
-              </>
+              <div style={{ fontSize: '58px', fontWeight: '900', color: '#0ecb81' }}>{countdown.toFixed(2)}</div>
             ) : (
-              <div style={{ fontSize: '70px', fontWeight: '900', color: gameState === 'crashed' ? '#f6465d' : 'white', textShadow: '0 5px 30px rgba(255,255,255,0.1)' }}>
-                {multiplier}x
-              </div>
+              <div style={{ fontSize: '70px', fontWeight: '900', color: gameState === 'crashed' ? '#f6465d' : 'white' }}>{multiplier}x</div>
             )}
-            {gameState === 'crashed' && <div style={{ color: '#f6465d', fontWeight: '900', fontSize: '18px', marginTop: '-10px' }}>CRASHED!</div>}
           </div>
 
-          {/* 3D Rocket with Glow */}
+          {/* 3D Rocket */}
           {gameState === 'running' && (
-            <div style={{ position: 'absolute', bottom: '15%', left: '15%', animation: 'rocketMove 2s infinite ease-in-out' }}>
+            <div style={{ position: 'absolute', bottom: '20%', left: '20%', animation: 'rocketFly 2s infinite ease-in-out' }}>
               <img src={ROCKET_3D} style={{ width: '100px', filter: 'drop-shadow(0 0 15px #355df5)' }} />
-              <div style={{ position: 'absolute', top: '60px', left: '-50px', width: '80px', height: '2px', background: 'linear-gradient(90deg, transparent, rgba(53, 93, 245, 0.8))', transform: 'rotate(-35deg)', borderRadius: '100%' }}></div>
             </div>
           )}
 
           {/* History Badges */}
-          <div style={{ position: 'absolute', bottom: '18px', display: 'flex', gap: '8px', zIndex: 10 }}>
+          <div style={{ position: 'absolute', bottom: '15px', display: 'flex', gap: '8px' }}>
             {history.map((h, i) => (
-              <div key={i} style={{ background: h.includes('210') ? 'linear-gradient(135deg, #4b2b5e, #2b1a3a)' : '#1e2329', color: h.includes('210') ? '#a358df' : '#f6465d', padding: '6px 14px', borderRadius: '12px', fontSize: '11px', fontWeight: '900', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 4px 10px rgba(0,0,0,0.3)' }}>{h}</div>
+              <div key={i} style={{ background: h.includes('210') ? '#4b2b5e' : '#1e2329', color: h.includes('210') ? '#a358df' : '#f6465d', padding: '6px 14px', borderRadius: '12px', fontSize: '11px', fontWeight: 'bold' }}>{h}</div>
             ))}
           </div>
         </div>
 
-        {/* 3. Action Buttons (ကာလာအစုံ) */}
+        {/* 3. Action Buttons */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '20px' }}>
-          <button onClick={() => handleBet("🎁")} style={{ background: '#1e2329', color: 'white', padding: '20px', borderRadius: '24px', border: '1px solid #363c44', fontWeight: '900', fontSize: '16px', boxShadow: '0 6px 0 #000', active: { transform: 'translateY(4px)' } }}>BET 🎁</button>
-          <button onClick={() => handleBet("💎")} style={{ background: 'linear-gradient(135deg, #355df5 0%, #00ccff 100%)', color: 'white', padding: '20px', borderRadius: '24px', border: 'none', fontWeight: '900', fontSize: '16px', boxShadow: '0 6px 0 #1a2b6d', textShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>BET 💎</button>
+          <button onClick={() => handleBet("🎁")} style={{ background: '#1e2329', color: 'white', padding: '20px', borderRadius: '24px', border: '1px solid #363c44', fontWeight: 'bold' }}>Bet 🎁</button>
+          <button onClick={() => handleBet("💎")} style={{ background: 'linear-gradient(135deg, #355df5, #00ccff)', color: 'white', padding: '20px', borderRadius: '24px', border: 'none', fontWeight: 'bold', boxShadow: '0 5px 15px rgba(53, 93, 245, 0.3)' }}>Bet 💎</button>
         </div>
 
-        {/* 4. Live Bet History List */}
+        {/* 4. Live Bet History */}
         <div style={{ marginTop: '25px' }}>
-          {bets.length > 0 ? bets.map((b, idx) => (
-            <div key={idx} style={{ background: 'linear-gradient(90deg, #1e2329 0%, #161a1e 100%)', borderRadius: '20px', padding: '15px', display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '12px', border: '1px solid rgba(255,255,255,0.03)', animation: b.isNew ? 'slideIn 0.3s ease-out' : 'none' }}>
-              <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: '#0b0e11', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', border: '1px solid #2b3139' }}>{b.icon}</div>
+          {bets.map((b, idx) => (
+            <div key={idx} style={{ background: '#1e2329', borderRadius: '20px', padding: '15px', display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '12px' }}>
+              <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: '#0b0e11', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px' }}>{b.icon}</div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '14px', fontWeight: '800', letterSpacing: '0.5px' }}>{b.user}</div>
-                <div style={{ fontSize: '11px', color: '#929aa5' }}>{b.amount.toFixed(2)} TON • <span style={{color: '#0ecb81', fontWeight: 'bold'}}>LIVE x{multiplier}</span></div>
+                <div style={{ fontSize: '14px', fontWeight: 'bold' }}>{b.user}</div>
+                <div style={{ fontSize: '11px', color: '#929aa5' }}>{b.amount} TON • <span style={{color: '#0ecb81'}}>LIVE x{multiplier}</span></div>
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '15px', fontWeight: '900', color: '#0ecb81' }}>+{(b.amount * multiplier).toFixed(2)}</div>
-                <div style={{ fontSize: '9px', color: '#929aa5', fontWeight: 'bold'
+              <div style={{ textAlign: 'right', color: '#0ecb81', fontWeight: 'bold' }}>+{(b.amount * multiplier).toFixed(2)}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 5. Nav Bar */}
+      <div style={{ position: 'fixed', bottom: '0', left: '0', right: '0', background: '#0b0e11', display: 'flex', justifyContent: 'space-around', padding: '20px 0', borderTop: '1px solid #1e2329' }}>
+        {[{n:'Inventory',i:'🎁'}, {n:'Upgrade',i:'⚒️'}, {n:'Crash',i:'📈'}, {n:'Cases',i:'🗃️'}, {n:'Profile',i:'👤'}].map(t => (
+          <div key={t.n} style={{ textAlign: 'center', opacity: t.n === 'Crash' ? 1 : 0.3 }}>
+            <div style={{ fontSize: '24px' }}>{t.i}</div>
+            <div style={{ fontSize: '10px', color: '#929aa5', marginTop: '5px' }}>{t.n}</div>
+          </div>
+        ))}
+      </div>
+
+      <style>{`@keyframes rocketFly { 0%,100%{transform:translate(0,0)} 50%{transform:translate(15px,-20px)} }`}</style>
+    </div>
+  );
+};
+
+export default App;
