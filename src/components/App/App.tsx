@@ -1,44 +1,54 @@
 import React, { useState, useEffect } from "react";
 
-// NFT ပုံရိပ်စစ်စစ်များ (Image Links)
-const nftImages = [
-  "https://i.postimg.cc/mD3m9n0L/nft1.png", // Futuristic Panda/Ape
-  "https://i.postimg.cc/9f4HqXvP/nft2.png", // Cyberpunk Character
-  "https://i.postimg.cc/7Z0S2V6M/nft3.png", // Gold Coin/Token
-  "https://i.postimg.cc/vT4m1YvN/nft4.png"  // Premium Lootbox
-];
+// 3D & Premium Assets
+const NFT_AVATAR = "https://img.freepik.com/free-vector/hand-drawn-nft-style-ape-illustration_23-2149622021.jpg";
+const ROCKET_3D = "https://static.vecteezy.com/system/resources/previews/009/384/876/original/rocket-flying-on-transparent-background-free-png.png";
+
+interface BetRecord {
+  user: string;
+  amount: number;
+  icon: string;
+  isNew?: boolean;
+}
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [gameState, setGameState] = useState<"waiting" | "running" | "crashed">("waiting");
   const [multiplier, setMultiplier] = useState(1.00);
   const [countdown, setCountdown] = useState(5.00);
-  const [randomNFT, setRandomNFT] = useState(nftImages[0]);
-  const [bets, setBets] = useState<any[]>([]);
+  const [history, setHistory] = useState<string[]>(["x1.52", "x1.86", "x210.75", "x3.56"]);
+  const [bets, setBets] = useState<BetRecord[]>([]);
 
   useEffect(() => {
-    // ဝင်ဝင်ချင်းမှာ Random NFT စိုစိုလေးတစ်ခုရွေးမယ်
-    setRandomNFT(nftImages[Math.floor(Math.random() * nftImages.length)]);
-    setTimeout(() => setLoading(false), 2500);
+    // Loading Screen with 3D Logo Effect
+    const timer = setTimeout(() => setLoading(false), 2500);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
     if (loading) return;
     let timer: any;
+
     if (gameState === "waiting") {
       timer = setInterval(() => {
         setCountdown(prev => (prev <= 0.1 ? 0 : parseFloat((prev - 0.1).toFixed(2))));
         if (countdown <= 0) setGameState("running");
       }, 100);
-    } else if (gameState === "running") {
+    } 
+    else if (gameState === "running") {
       timer = setInterval(() => {
         setMultiplier(prev => {
           const next = prev + 0.01;
-          if (Math.random() < 0.012 && next > 1.1) { setGameState("crashed"); return prev; }
+          if (Math.random() < 0.015 && next > 1.1) {
+            setGameState("crashed");
+            setHistory(prevH => [`x${next.toFixed(2)}`, ...prevH].slice(0, 6));
+            return prev;
+          }
           return parseFloat(next.toFixed(2));
         });
       }, 60);
-    } else if (gameState === "crashed") {
+    } 
+    else if (gameState === "crashed") {
       timer = setTimeout(() => {
         setMultiplier(1.00);
         setCountdown(5.00);
@@ -51,77 +61,92 @@ const App: React.FC = () => {
 
   const handleBet = (icon: string) => {
     if (gameState !== "waiting") return;
-    setBets(prev => [{ user: "Pâñðâ (You)", amount: "0.10", icon: icon }, ...prev]);
+    const myBet: BetRecord = { user: "Pâñðâ (You)", amount: 0.10, icon: icon, isNew: true };
+    setBets(prev => [myBet, ...prev]);
   };
 
-  if (loading) {
-    return (
-      <div style={{ background: '#050709', height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        {/* NFT Image with Glow Effect */}
-        <div style={{ position: 'relative' }}>
-          <div style={{ position: 'absolute', width: '180px', height: '180px', background: '#355df5', filter: 'blur(80px)', opacity: 0.5 }}></div>
-          <img src={randomNFT} alt="NFT" style={{ width: '180px', height: '180px', borderRadius: '30px', position: 'relative', animation: 'float 3s infinite ease-in-out' }} />
+  if (loading) return (
+    <div style={{ background: '#050709', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ position: 'relative', marginBottom: '30px' }}>
+          <div style={{ position: 'absolute', inset: -20, background: '#355df5', filter: 'blur(50px)', opacity: 0.3 }}></div>
+          <img src={NFT_AVATAR} style={{ width: '110px', borderRadius: '25px', position: 'relative', animation: 'float 3s infinite ease-in-out' }} />
         </div>
-        <div style={{ marginTop: '40px', textAlign: 'center' }}>
-          <div style={{ color: '#355df5', fontWeight: 'bold', fontSize: '14px', letterSpacing: '3px' }}>SYNCING NFT DATA...</div>
-          <div style={{ width: '200px', height: '4px', background: '#1e2329', marginTop: '15px', borderRadius: '10px', overflow: 'hidden' }}>
-            <div style={{ width: '60%', height: '100%', background: 'linear-gradient(90deg, #355df5, #00ccff)', animation: 'load 2s infinite' }}></div>
-          </div>
-        </div>
-        <style>{`
-          @keyframes float { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-20px) scale(1.05); } }
-          @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-        `}</style>
+        <div style={{ fontSize: '12px', letterSpacing: '4px', color: '#355df5', fontWeight: '900' }}>LOADING SYSTEM...</div>
       </div>
-    );
-  }
+      <style>{`@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }`}</style>
+    </div>
+  );
 
   return (
-    <div style={{ background: '#0b0e11', minHeight: '100vh', color: 'white', fontFamily: 'sans-serif' }}>
-      {/* Header */}
+    <div style={{ background: '#0b0e11', minHeight: '100vh', color: 'white', fontFamily: 'Inter, sans-serif', paddingBottom: '100px' }}>
+      
+      {/* 1. Profile Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px 20px', alignItems: 'center' }}>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <img src={randomNFT} style={{ width: '40px', height: '40px', borderRadius: '10px', border: '1px solid #355df5' }} />
-          <div><div style={{ fontWeight: 'bold' }}>Pâñðâ</div><div style={{ fontSize: '11px', color: '#0ecb81' }}>VIP Level 1</div></div>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <img src={NFT_AVATAR} style={{ width: '45px', height: '45px', borderRadius: '14px', border: '2px solid #355df5', boxShadow: '0 0 10px rgba(53, 93, 245, 0.5)' }} />
+          <div>
+            <div style={{ fontWeight: '800', fontSize: '16px' }}>Pâñðâ</div>
+            <div style={{ fontSize: '11px', color: '#0ecb81', fontWeight: 'bold' }}>VIP LEVEL 1</div>
+          </div>
         </div>
-        <div style={{ background: '#1e2329', padding: '8px 15px', borderRadius: '12px', fontWeight: 'bold', color: '#fcd535' }}>0.01 TON</div>
+        <div style={{ background: 'linear-gradient(180deg, #1e2329 0%, #161a1e 100%)', padding: '10px 18px', borderRadius: '16px', fontWeight: '900', color: '#fcd535', border: '1px solid #2b3139', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          0.01 TON <div style={{ background: '#355df5', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', color: 'white' }}>+</div>
+        </div>
       </div>
 
       <div style={{ padding: '0 15px' }}>
-        {/* Crash Visualizer */}
-        <div style={{ background: 'radial-gradient(circle at center, #1e2329 0%, #0b0e11 100%)', borderRadius: '30px', height: '260px', position: 'relative', border: '1px solid #2b3139', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-           <div style={{ textAlign: 'center', zIndex: 2 }}>
-             <div style={{ fontSize: '60px', fontWeight: '900', color: gameState === 'crashed' ? '#f6465d' : 'white' }}>
-               {gameState === 'waiting' ? countdown.toFixed(2) : multiplier + 'x'}
-             </div>
-             {gameState === 'waiting' && <div style={{ fontSize: '12px', color: '#0ecb81', letterSpacing: '2px' }}>PREPARING ROCKET...</div>}
-           </div>
-           {/* Animated Background Grid */}
-           <div style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0.1, backgroundSize: '40px 40px', backgroundImage: 'linear-gradient(to right, #355df5 1px, transparent 1px), linear-gradient(to bottom, #355df5 1px, transparent 1px)' }}></div>
-        </div>
+        {/* 2. 3D Game Area (ဇယားကွက်မှိန်မှိန် + Rocket ပျံသန်းမှု) */}
+        <div style={{ background: 'radial-gradient(circle at center, #1c2127 0%, #0b0e11 100%)', borderRadius: '32px', height: '280px', position: 'relative', border: '1px solid #2b3139', overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
+          
+          {/* Subtle Grid */}
+          <div style={{ position: 'absolute', inset: 0, opacity: 0.05, backgroundImage: 'linear-gradient(#355df5 1px, transparent 1px), linear-gradient(90deg, #355df5 1px, transparent 1px)', backgroundSize: '45px 45px' }}></div>
 
-        {/* Bet Options with Better Colors */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '20px' }}>
-          <button onClick={() => handleBet("🎁")} style={{ background: '#1e2329', color: 'white', padding: '18px', borderRadius: '20px', border: '1px solid #363c44', fontWeight: 'bold', boxShadow: '0 4px 0 #000' }}>Bet 🎁</button>
-          <button onClick={() => handleBet("💎")} style={{ background: 'linear-gradient(135deg, #355df5, #0072ff)', color: 'white', padding: '18px', borderRadius: '20px', border: 'none', fontWeight: 'bold', boxShadow: '0 4px 0 #1a2b6d' }}>Bet 💎</button>
-        </div>
-
-        {/* Dynamic Bet Table */}
-        <div style={{ marginTop: '25px' }}>
-          {bets.map((b, idx) => (
-            <div key={idx} style={{ background: 'rgba(30, 35, 41, 0.5)', borderRadius: '15px', padding: '12px', display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px', border: '1px solid rgba(255,255,255,0.05)' }}>
-              <div style={{ width: '35px', height: '35px', borderRadius: '8px', background: '#0b0e11', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{b.icon}</div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '13px', fontWeight: 'bold' }}>{b.user}</div>
-                <div style={{ fontSize: '11px', color: '#929aa5' }}>{b.amount} TON • <span style={{color: '#0ecb81'}}>Live</span></div>
+          <div style={{ zIndex: 10, textAlign: 'center', marginTop: '50px' }}>
+            {gameState === 'waiting' ? (
+              <>
+                <div style={{ fontSize: '58px', fontWeight: '900', color: '#0ecb81', textShadow: '0 0 20px rgba(14, 203, 129, 0.3)' }}>{countdown.toFixed(2)}</div>
+                <div style={{ fontSize: '11px', color: '#0ecb81', letterSpacing: '4px', fontWeight: 'bold' }}>STARTING...</div>
+              </>
+            ) : (
+              <div style={{ fontSize: '70px', fontWeight: '900', color: gameState === 'crashed' ? '#f6465d' : 'white', textShadow: '0 5px 30px rgba(255,255,255,0.1)' }}>
+                {multiplier}x
               </div>
-              <div style={{ textAlign: 'right', color: '#0ecb81', fontWeight: 'bold' }}>+{(parseFloat(b.amount) * multiplier).toFixed(2)}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
+            )}
+            {gameState === 'crashed' && <div style={{ color: '#f6465d', fontWeight: '900', fontSize: '18px', marginTop: '-10px' }}>CRASHED!</div>}
+          </div>
 
-export default App;
+          {/* 3D Rocket with Glow */}
+          {gameState === 'running' && (
+            <div style={{ position: 'absolute', bottom: '15%', left: '15%', animation: 'rocketMove 2s infinite ease-in-out' }}>
+              <img src={ROCKET_3D} style={{ width: '100px', filter: 'drop-shadow(0 0 15px #355df5)' }} />
+              <div style={{ position: 'absolute', top: '60px', left: '-50px', width: '80px', height: '2px', background: 'linear-gradient(90deg, transparent, rgba(53, 93, 245, 0.8))', transform: 'rotate(-35deg)', borderRadius: '100%' }}></div>
+            </div>
+          )}
+
+          {/* History Badges */}
+          <div style={{ position: 'absolute', bottom: '18px', display: 'flex', gap: '8px', zIndex: 10 }}>
+            {history.map((h, i) => (
+              <div key={i} style={{ background: h.includes('210') ? 'linear-gradient(135deg, #4b2b5e, #2b1a3a)' : '#1e2329', color: h.includes('210') ? '#a358df' : '#f6465d', padding: '6px 14px', borderRadius: '12px', fontSize: '11px', fontWeight: '900', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 4px 10px rgba(0,0,0,0.3)' }}>{h}</div>
+            ))}
+          </div>
+        </div>
+
+        {/* 3. Action Buttons (ကာလာအစုံ) */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '20px' }}>
+          <button onClick={() => handleBet("🎁")} style={{ background: '#1e2329', color: 'white', padding: '20px', borderRadius: '24px', border: '1px solid #363c44', fontWeight: '900', fontSize: '16px', boxShadow: '0 6px 0 #000', active: { transform: 'translateY(4px)' } }}>BET 🎁</button>
+          <button onClick={() => handleBet("💎")} style={{ background: 'linear-gradient(135deg, #355df5 0%, #00ccff 100%)', color: 'white', padding: '20px', borderRadius: '24px', border: 'none', fontWeight: '900', fontSize: '16px', boxShadow: '0 6px 0 #1a2b6d', textShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>BET 💎</button>
+        </div>
+
+        {/* 4. Live Bet History List */}
+        <div style={{ marginTop: '25px' }}>
+          {bets.length > 0 ? bets.map((b, idx) => (
+            <div key={idx} style={{ background: 'linear-gradient(90deg, #1e2329 0%, #161a1e 100%)', borderRadius: '20px', padding: '15px', display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '12px', border: '1px solid rgba(255,255,255,0.03)', animation: b.isNew ? 'slideIn 0.3s ease-out' : 'none' }}>
+              <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: '#0b0e11', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', border: '1px solid #2b3139' }}>{b.icon}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '14px', fontWeight: '800', letterSpacing: '0.5px' }}>{b.user}</div>
+                <div style={{ fontSize: '11px', color: '#929aa5' }}>{b.amount.toFixed(2)} TON • <span style={{color: '#0ecb81', fontWeight: 'bold'}}>LIVE x{multiplier}</span></div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '15px', fontWeight: '900', color: '#0ecb81' }}>+{(b.amount * multiplier).toFixed(2)}</div>
+                <div style={{ fontSize: '9px', color: '#929aa5', fontWeight: 'bold'
