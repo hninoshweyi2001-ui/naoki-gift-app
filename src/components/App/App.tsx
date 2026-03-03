@@ -7,12 +7,10 @@ function App() {
       minHeight: '100vh', 
       color: 'white', 
       display: 'flex', 
-      flexDirection: 'column',
       alignItems: 'center', 
       justifyContent: 'center' 
     }}>
-      <h1 style={{ color: '#355df5' }}>Panda Mini App</h1>
-      <p>System is Online.</p>
+      <h1 style={{ color: '#355df5' }}>Panda App Online</h1>
     </div>
   );
 }
