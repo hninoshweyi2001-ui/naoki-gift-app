@@ -6,44 +6,50 @@ export const App: React.FC = () => {
   const [coins, setCoins] = useState(0);
   const [isAnimate, setIsAnimate] = useState(false);
 
-  // Rocket ကို နှိပ်ရင် Coin တိုးပြီး Animation ပြမည့် Function
   const handleTap = () => {
     setCoins((prev) => prev + 1);
     setIsAnimate(true);
-    setTimeout(() => setIsAnimate(false), 200);
+    setTimeout(() => setIsAnimate(false), 100);
   };
 
   return (
-    <div className={styles.App}>
+    <div className={clsx(styles.App)}>
       <div className={styles.container}>
-        {/* Score Board - Coin အရေအတွက်ပြရန် */}
-        <div style={{ fontSize: '30px', fontWeight: 'bold', marginBottom: '20px', color: '#ffcc00' }}>
+        <div style={{ fontSize: '40px', fontWeight: 'bold', color: '#ffcc00', marginBottom: '10px' }}>
           💰 {coins}
         </div>
-
-        {/* Rocket Image - နှိပ်လို့ရသည့် နေရာ */}
+        
         <div 
           onClick={handleTap}
           style={{ 
+            fontSize: '120px', 
             cursor: 'pointer',
-            transform: isAnimate ? 'scale(0.9) translateY(-10px)' : 'scale(1)',
-            transition: '0.1s',
-            fontSize: '100px'
+            display: 'inline-block',
+            transition: 'transform 0.1s',
+            transform: isAnimate ? 'scale(0.8)' : 'scale(1)'
           }}
         >
           🚀
         </div>
 
-        <h1 style={{ marginTop: '20px' }}>Naoki Rocket</h1>
-        <p style={{ opacity: 0.7 }}>Tap the Rocket to Earn Coins!</p>
-
-        {/* Start Game ခလုတ်ကိုလည်း Coin တိုးအောင် ချိတ်ထားပေးသည် */}
+        <h1 style={{ color: 'white', marginTop: '20px' }}>Naoki Rocket</h1>
+        <p style={{ color: 'rgba(255,255,255,0.7)' }}>Tap Rocket to Earn Coins!</p>
+        
         <button 
-          className={styles.button} 
           onClick={handleTap}
-          style={{ marginTop: '30px', background: 'linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%)' }}
+          style={{
+            marginTop: '30px',
+            padding: '15px 40px',
+            fontSize: '20px',
+            borderRadius: '50px',
+            border: 'none',
+            background: 'linear-gradient(45deg, #0088cc, #00ffcc)',
+            color: 'white',
+            fontWeight: 'bold',
+            boxShadow: '0 4px 15px rgba(0,255,200,0.3)'
+          }}
         >
-          TAP TO EARN!
+          EARN NOW 💰
         </button>
       </div>
     </div>
