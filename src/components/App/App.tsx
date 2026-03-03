@@ -5,162 +5,159 @@ const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState("crash");
   const [gameState, setGameState] = useState<"waiting" | "running" | "crashed">("waiting");
   const [multiplier, setMultiplier] = useState(1.00);
-  const [countdown, setCountdown] = useState(5);
-  const [progress, setProgress] = useState(0);
-  const [randomNFT, setRandomNFT] = useState("");
-
-  // NFT ပုံစံအမျိုးမျိုး (ဥပမာ- Bitcoin Gold, Diamond, Panda Rare စသဖြင့်)
-  const nftList = ["🪙", "💎", "🐼", "🚀", "👑", "🍀"];
+  const [countdown, setCountdown] = useState(5.00);
+  
+  // အရင်ပေါက်ကွဲခဲ့တဲ့ History ဂဏန်းများကို သိမ်းမည့် State
+  const [history, setHistory] = useState<string[]>(["x1.52", "x1.86", "x210.75"]);
 
   useEffect(() => {
-    // ၁။ Loading စကရင်အတွက် Random NFT ရွေးချယ်ခြင်း
-    setRandomNFT(nftList[Math.floor(Math.random() * nftList.length)]);
-
-    // ၂။ Loading Progress Bar (၃ စက္ကန့်ကြာမယ်)
-    const loadTimer = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(loadTimer);
-          setTimeout(() => setLoading(false), 500);
-          return 100;
-        }
-        return prev + 2;
-      });
-    }, 50);
-
-    return () => clearInterval(loadTimer);
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
   }, []);
 
-  // --- CRASH GAME ENGINE ---
   useEffect(() => {
-    if (loading) return;
-
+    if (loading || activeTab !== "crash") return;
     let timer: any;
+
     if (gameState === "waiting") {
-      if (countdown > 0) {
-        timer = setInterval(() => setCountdown(prev => prev - 1), 1000);
-      } else {
-        setGameState("running");
-      }
-    } else if (gameState === "running") {
       timer = setInterval(() => {
-        setMultiplier((prev) => {
-          const next = prev + 0.02;
-          if (Math.random() < 0.015 && next > 1.2) {
+        setCountdown(prev => (prev <= 0.1 ? 0 : parseFloat((prev - 0.1).toFixed(2))));
+        if (countdown <= 0) setGameState("running");
+      }, 100);
+    } 
+    else if (gameState === "running") {
+      timer = setInterval(() => {
+        setMultiplier(prev => {
+          const next = prev + 0.01;
+          // ပေါက်ကွဲနှုန်း (Random Crash)
+          if (Math.random() < 0.012 && next > 1.1) {
             setGameState("crashed");
+            // ပေါက်ကွဲသွားတဲ့ ဂဏန်းကို History ထဲ ထည့်လိုက်ခြင်း
+            const newResult = `x${next.toFixed(2)}`;
+            setHistory(prevH => [newResult, ...prevH].slice(0, 6)); 
             return prev;
           }
           return parseFloat(next.toFixed(2));
         });
-      }, 80);
-    } else if (gameState === "crashed") {
+      }, 60);
+    } 
+    else if (gameState === "crashed") {
       timer = setTimeout(() => {
         setMultiplier(1.00);
-        setCountdown(5);
+        setCountdown(5.00);
         setGameState("waiting");
       }, 3000);
     }
-    return () => clearInterval(timer);
-  }, [gameState, countdown, loading]);
 
-  // --- LOADING SCREEN UI ---
-  if (loading) {
-    return (
-      <div style={{ background: '#0b0e11', height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
-        {/* Floating NFT Animation */}
-        <div style={{ fontSize: '80px', marginBottom: '40px', animation: 'float 3s ease-in-out infinite', filter: 'drop-shadow(0 0 20px rgba(252, 213, 53, 0.4))' }}>
-          {randomNFT}
+    return () => clearInterval(timer);
+  }, [gameState, countdown, loading, activeTab]);
+
+  // အရောင်သတ်မှတ်ချက် (IMG_5191 အရ)
+  const getBadgeColor = (val: string) => {
+    const num = parseFloat(val.replace('x', ''));
+    if (num >= 100) return { bg: '#4b2b5e', text: '#a358df' }; // Big Win (Purple)
+    if (num >= 2) return { bg: '#1e3d2e', text: '#0ecb81' };   // Good Win (Green)
+    return { bg: '#2b3139', text: '#f6465d' };               // Low (Red)
+  };
+
+  if (loading) return <div style={{background:'#0b0e11', height:'100vh'}} />;
+
+  return (
+    <div style={{ background: '#0b0e11', minHeight: '100vh', color: 'white', fontFamily: 'sans-serif' }}>
+      
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px 20px' }}>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#355df5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🐼</div>
+          <div><div style={{ fontWeight: 'bold', fontSize: '14px' }}>Pâñðâ</div><div style={{ fontSize: '11px', color: '#929aa5' }}>Level 1</div></div>
         </div>
-        
-        {/* Loading Text & Progress */}
-        <div style={{ width: '250px', textAlign: 'center' }}>
-          <div style={{ marginBottom: '15px', fontSize: '14px', letterSpacing: '2px', fontWeight: 'bold', color: '#355df5' }}>LOADING... {progress}%</div>
-          <div style={{ height: '8px', background: '#1e2329', borderRadius: '10px', overflow: 'hidden', border: '1px solid #2b3139' }}>
-            <div style={{ height: '100%', width: `${progress}%`, background: 'linear-gradient(90deg, #355df5, #00ccff)', transition: '0.1s', boxShadow: '0 0 10px #355df5' }}></div>
+        <div style={{ background: '#1e2329', padding: '8px 15px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontWeight: 'bold', fontSize: '14px', color: '#fcd535' }}>0.01 TON</span>
+          <div style={{ background: '#355df5', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px' }}>+</div>
+        </div>
+      </div>
+
+      <div style={{ padding: '0 15px' }}>
+        {/* Game Area */}
+        <div style={{ background: '#161a1e', borderRadius: '28px', padding: '20px', position: 'relative', border: '1px solid #2b3139', height: '270px', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', top: '15px', left: '15px', fontSize: '12px', color: '#5e6673', display: 'flex', alignItems: 'center', gap: '5px' }}>
+             🕒 Bet history
+          </div>
+          
+          <div style={{ textAlign: 'center', marginTop: '45px' }}>
+            {gameState === 'waiting' ? (
+              <>
+                <div style={{ fontSize: '55px', fontWeight: 'bold', color: '#0ecb81' }}>{countdown.toFixed(2)}</div>
+                <div style={{ fontSize: '11px', color: '#0ecb81', letterSpacing: '2px', fontWeight: 'bold' }}>ИГРА ЧЕРЕЗ</div>
+                <div style={{ width: '140px', height: '4px', background: '#2b3139', margin: '15px auto', borderRadius: '2px' }}>
+                   <div style={{ width: `${(countdown/5)*100}%`, height: '100%', background: '#0ecb81', transition: '0.1s linear' }}></div>
+                </div>
+              </>
+            ) : (
+              <div style={{ fontSize: '65px', fontWeight: 'bold', color: gameState === 'crashed' ? '#f6465d' : 'white', transition: '0.1s' }}>
+                {multiplier}x
+              </div>
+            )}
+          </div>
+
+          {/* Rocket Animation */}
+          {gameState === 'running' && (
+            <div style={{ position: 'absolute', bottom: '65px', left: '50px', fontSize: '55px', animation: 'fly 1s infinite ease-in-out' }}>
+               🚀
+            </div>
+          )}
+
+          {/* Dynamic History Bar */}
+          <div style={{ position: 'absolute', bottom: '15px', left: '0', right: '0', display: 'flex', justifyContent: 'center', gap: '6px', padding: '0 10px' }}>
+            {history.map((m, i) => {
+              const colors = getBadgeColor(m);
+              return (
+                <div key={i} style={{ background: colors.bg, color: colors.text, padding: '4px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold', minWidth: '45px', textAlign: 'center' }}>
+                  {m}
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        <style>{`
-          @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(10deg); }
-          }
-        `}</style>
-      </div>
-    );
-  }
-
-  // --- MAIN APP UI (Game Area) ---
-  return (
-    <div style={{ background: '#0b0e11', minHeight: '100vh', color: 'white', fontFamily: 'sans-serif' }}>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{ width: '45px', height: '45px', borderRadius: '15px', background: 'linear-gradient(45deg, #355df5, #00ccff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>🐼</div>
-          <div><div style={{ fontWeight: 'bold' }}>Pâñðâ</div><div style={{ fontSize: '12px', color: '#0ecb81' }}>Level 1</div></div>
-        </div>
-        <div style={{ background: '#1e2329', padding: '10px 18px', borderRadius: '14px', border: '1px solid #2b3139', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontWeight: 'bold', color: '#fcd535' }}>0.01 TON</span>
-          <div style={{ background: '#355df5', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</div>
-        </div>
-      </div>
-
-      <div style={{ padding: '0 20px' }}>
-        {/* Crash Game View */}
-        <div style={{ height: '320px', background: '#161a1e', borderRadius: '35px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '2px solid #2b3139', position: 'relative' }}>
-          {gameState === "waiting" && (
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ color: '#929aa5', fontSize: '14px' }}>NEXT ROUND IN</div>
-              <div style={{ fontSize: '60px', fontWeight: 'bold', color: '#fcd535' }}>0{countdown}.00</div>
-              <div style={{ width: '150px', height: '4px', background: '#2b3139', marginTop: '10px', borderRadius: '2px' }}>
-                <div style={{ width: `${(countdown/5)*100}%`, height: '100%', background: '#0ecb81', transition: '1s linear' }}></div>
-              </div>
-            </div>
-          )}
-          {gameState === "running" && (
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '75px', fontWeight: 'bold', color: '#0ecb81' }}>{multiplier}x</div>
-              <div style={{ fontSize: '50px', animation: 'rocketFly 1s infinite' }}>🚀</div>
-            </div>
-          )}
-          {gameState === "crashed" && (
-            <div style={{ textAlign: 'center', animation: 'shake 0.3s' }}>
-              <div style={{ fontSize: '75px', fontWeight: 'bold', color: '#f6465d' }}>{multiplier}x</div>
-              <div style={{ color: '#f6465d', fontWeight: 'bold' }}>CRASHED!</div>
-            </div>
-          )}
-        </div>
-
-        {/* Betting Button */}
-        <div style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-          <button style={{ background: '#1e2329', color: 'white', border: '1px solid #2b3139', padding: '18px', borderRadius: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-             Bet 🎁
+        {/* Bet Buttons */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '15px' }}>
+          <button style={{ background: '#1e2329', color: 'white', padding: '18px', borderRadius: '20px', border: '1px solid #2b3139', fontWeight: 'bold', fontSize: '15px' }}>
+            Bet 🎁
           </button>
-          <button style={{ background: '#355df5', color: 'white', border: 'none', padding: '18px', borderRadius: '20px', fontWeight: 'bold', boxShadow: '0 4px 15px rgba(53, 93, 245, 0.3)' }}>
-             Bet 💎
+          <button style={{ background: 'linear-gradient(45deg, #355df5, #00ccff)', color: 'white', padding: '18px', borderRadius: '20px', border: 'none', fontWeight: 'bold', fontSize: '15px', boxShadow: '0 5px 15px rgba(53, 93, 245, 0.3)' }}>
+            Bet 💎
           </button>
         </div>
+
+        {/* User Bet Row */}
+        <div style={{ marginTop: '15px', background: '#1e2329', borderRadius: '20px', padding: '15px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#0b0e11', fontSize: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>💎</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: '14px', fontWeight: 'bold' }}>MANIAC | Быков</div>
+            <div style={{ fontSize: '11px', color: '#929aa5' }}>0.10 TON • <span style={{color:'#0ecb81'}}>x{multiplier}</span></div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#0ecb81' }}>+{(0.1 * multiplier).toFixed(2)}</div>
+            <div style={{ fontSize: '11px', color: '#0ecb81' }}>TON</div>
+          </div>
+        </div>
       </div>
 
-      {/* Navigation */}
-      <div style={{ position: 'fixed', bottom: '20px', left: '20px', right: '20px', background: 'rgba(30, 35, 41, 0.95)', display: 'flex', justifyContent: 'space-around', padding: '15px', borderRadius: '25px', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}>
-        {['inventory', 'upgrade', 'crash', 'cases', 'profile'].map((id) => (
-          <div key={id} onClick={() => setActiveTab(id)} style={{ fontSize: '22px', color: activeTab === id ? '#355df5' : '#929aa5', cursor: 'pointer' }}>
-            {id === 'crash' ? '📈' : id === 'cases' ? '🗃️' : id === 'upgrade' ? '⚒️' : id === 'inventory' ? '🎁' : '👤'}
+      {/* Bottom Nav */}
+      <div style={{ position: 'fixed', bottom: '0', left: '0', right: '0', background: '#0b0e11', display: 'flex', justifyContent: 'space-around', padding: '15px 0', borderTop: '1px solid #1e2329', zIndex: 10 }}>
+        {[{n: 'Inventory', i: '🎁'}, {n: 'Upgrade', i: '⚒️'}, {n: 'Crash', i: '📈'}, {n: 'Cases', i: '🗃️'}, {n: 'Profile', i: '👤'}].map(t => (
+          <div key={t.n} onClick={() => setActiveTab(t.n.toLowerCase())} style={{ textAlign: 'center', opacity: activeTab === t.n.toLowerCase() ? 1 : 0.4 }}>
+            <div style={{ fontSize: '22px' }}>{t.i}</div>
+            <div style={{ fontSize: '10px', marginTop: '4px', color: '#929aa5' }}>{t.n}</div>
           </div>
         ))}
       </div>
 
       <style>{`
-        @keyframes rocketFly {
-          0% { transform: translate(0,0); }
-          50% { transform: translate(5px, -5px); }
-          100% { transform: translate(0,0); }
-        }
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-8px); }
-          75% { transform: translateX(8px); }
+        @keyframes fly { 
+          0%, 100% { transform: translate(0,0) rotate(5deg); } 
+          50% { transform: translate(10px, -15px) rotate(-5deg); } 
         }
       `}</style>
     </div>
