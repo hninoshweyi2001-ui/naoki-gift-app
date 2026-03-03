@@ -1,6 +1,6 @@
 import React from 'react';
 
-function App() {
+const App: React.FC = () => {
   return (
     <div style={{ 
       background: '#0b0e11', 
@@ -8,11 +8,12 @@ function App() {
       color: 'white', 
       display: 'flex', 
       alignItems: 'center', 
-      justifyContent: 'center' 
+      justifyContent: 'center',
+      fontSize: '24px'
     }}>
-      <h1 style={{ color: '#355df5' }}>Panda App Online</h1>
+      Panda App is Online!
     </div>
   );
-}
+};
 
 export default App;
